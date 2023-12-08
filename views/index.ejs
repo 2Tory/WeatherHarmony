@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="/styles/style.css">-->
+    <title>Weather Harmony</title>
+</head>
+
+
+
+<body>
+<h1>Weather Harmony</h1>
+
+<button id="currentPosition" onclick="getCurrentPositionWeather()">현재 위치</button>
+
+<p id="city"><%= weatherData.name %></p>
+<p id="currentTem">현재 기온 : <%= weatherData.main.temp%></p>
+<div id="currentPositionWeather"></div>
+
+
+<!-- 여기에 날씨 정보와 추천된 노래를 표시하는 부분을 추가하세요 -->
+</body>
+<script>
+    let latitude;
+    let longitude;
+    const currentPositionWeather = document.getElementById('currentPositionWeather');
+    async function getCurrentPositionWeather() {
+        try {
+            await currentPosition();
+
+            console.log('현재 위치의 위도:', latitude);
+            console.log('현재 위치의 경도:', longitude);
+            const weatherData = await fetch('/currentPosition', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ lat: latitude, lon: longitude }),
+            }).then(response => response.json());
+            const weather = JSON.stringify(weatherData);
+            const p = document.createElement('p');
+            p.textContent=weather;
+            currentPositionWeather.appendChild(p);
+            // 여기에서 날씨 정보를 사용하거나 처리할 수 있습니다.
+            console.log('Weather Data:', weatherData);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function currentPosition(){
+        return new Promise((resolve, reject)=>{
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+
+
+                        // 여기에서 위치 정보를 활용한 추가 작업을 수행할 수 있습니다.
+                        resolve();
+                    },
+                    (error) => {
+                        console.error('위치 정보를 가져오는데 실패했습니다.', error);
+                        reject(error);
+                    }
+                );
+            } else {
+                console.error('Geolocation이 지원되지 않습니다.');
+                reject('Geolocation이 지원되지 않습니다.');
+            }
+        });
+    }
+
+
+</script>
+</html>
