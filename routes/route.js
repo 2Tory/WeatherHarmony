@@ -4,4 +4,5 @@ const { controller } = require('../controllers/controller');
 
 router.get('/', controller.index);
 router.post('/currentPosition', controller.getCurrentPositionWeather);
+
 module.exports = router;

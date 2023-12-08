@@ -1,10 +1,10 @@
 const axios = require('axios');
 
-let lat;
-let lon;
 const owmApiKey = '8df00d070b08179e231e7ba594de2e3c';
 const spotifyApiKey = '';
 let city = 'Busan';  // 원하는 도시명으로 변경 가능
+let lat;
+let lon;
 
 const searchCityWeatherApiUrl = () => `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${owmApiKey}`;
 const currentPositionWeatherApiUrl = () => `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${owmApiKey}`;
