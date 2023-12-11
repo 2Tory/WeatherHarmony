@@ -11,24 +11,46 @@
 <h1>Weather Harmony</h1>
 
 <button id="currentPosition" onclick="getCurrentPositionWeather()">현재 위치</button>
-
-<p id="city"><%= weatherData.name %></p>
-<p id="currentTem">현재 기온 : <%= weatherData.main.temp%></p>
-<div id="currentPositionWeather"></div>
-
+<div id="weather">
+    <div id="city">
+    </div>
+    <div id="weatherInfo">
+    </div>
+    <div id="weatherIcon">
+    </div>
+    <div id="currentTemp">
+    </div>
+    <div id="feels_temp">
+    </div>
+    <div id="humidity">
+    </div>
+    <div id="wind_speed">
+    </div>
+    <div id="temp_min">
+    </div>
+    <div id="temp_max">
+    </div>
+</div>
 
 <!-- 여기에 날씨 정보와 추천된 노래를 표시하는 부분을 추가하세요 -->
 </body>
 <script>
     let latitude;
     let longitude;
-    const currentPositionWeather = document.getElementById('currentPositionWeather');
+    const city = document.getElementById('city');
+    const weatherInfo = document.getElementById('weatherInfo');
+    const weatherIcon = document.getElementById('weatherIcon');
+    const currentTemp = document.getElementById('currentTemp');
+    const feels_temp = document.getElementById('feels_temp');
+    const humidity = document.getElementById('humidity');
+    const wind_speed = document.getElementById('wind_speed');
+    const temp_min = document.getElementById('temp_min');
+    const temp_max = document.getElementById('temp_max');
+
     async function getCurrentPositionWeather() {
         try {
             await currentPosition();
 
-            console.log('현재 위치의 위도:', latitude);
-            console.log('현재 위치의 경도:', longitude);
             const weatherData = await fetch('/currentPosition', {
                 method: 'post',
                 headers: {
@@ -36,12 +58,36 @@
                 },
                 body: JSON.stringify({ lat: latitude, lon: longitude }),
             }).then(response => response.json());
-            const weather = JSON.stringify(weatherData);
-            const p = document.createElement('p');
-            p.textContent=weather;
-            currentPositionWeather.appendChild(p);
-            // 여기에서 날씨 정보를 사용하거나 처리할 수 있습니다.
-            console.log('Weather Data:', weatherData);
+
+            const p1 = document.createElement('p');
+            const p2 = document.createElement('p');
+            const img3 = document.createElement('img');
+            const p4 = document.createElement('p');
+            const p5 = document.createElement('p');
+            const p6 = document.createElement('p');
+            const p7 = document.createElement('p');
+            const p8 = document.createElement('p');
+            const p9 = document.createElement('p');
+
+            p1.textContent=weatherData.city;
+            p2.textContent=weatherData.weatherInfo;
+            img3.src=weatherData.weatherIcon;
+            p4.textContent='현재 기온 : '+weatherData.temp+'℃';
+            p5.textContent='체감 기온 : '+weatherData.feels_temp+'℃';
+            p6.textContent='습도 : '+weatherData.humidity+'%';
+            p7.textContent='풍속 : '+weatherData.wind_speed+'m/s';
+            p8.textContent='최저 기온 : '+weatherData.temp_min+'℃';
+            p9.textContent='최고 기온 : '+weatherData.temp_max+'℃';
+
+            city.appendChild(p1);
+            weatherInfo.appendChild(p2);
+            weatherIcon.appendChild(img3);
+            currentTemp.appendChild(p4);
+            feels_temp.appendChild(p5);
+            humidity.appendChild(p6);
+            wind_speed.appendChild(p7);
+            temp_min.appendChild(p8);
+            temp_max.appendChild(p9);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -71,6 +117,7 @@
         });
     }
 
+    getCurrentPositionWeather();
 
 </script>
 </html>
