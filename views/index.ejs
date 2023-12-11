@@ -12,24 +12,23 @@
 
 <button id="currentPosition" onclick="getCurrentPositionWeather()">현재 위치</button>
 <div id="weather">
-    <div id="city">
-    </div>
-    <div id="weatherInfo">
-    </div>
-    <div id="weatherIcon">
-    </div>
-    <div id="currentTemp">
-    </div>
-    <div id="feels_temp">
-    </div>
-    <div id="humidity">
-    </div>
-    <div id="wind_speed">
-    </div>
-    <div id="temp_min">
-    </div>
-    <div id="temp_max">
-    </div>
+    <p id="city">
+    </p>
+    <p id="weatherInfo">
+    </p>
+    <img id="weatherIcon" src="img/loding.gif" alt="icon">
+    <p id="currentTemp">
+    </p>
+    <p id="feels_temp">
+    </p>
+    <p id="humidity">
+    </p>
+    <p id="wind_speed">
+    </p>
+    <p id="temp_min">
+    </p>
+    <p id="temp_max">
+    </p>
 </div>
 
 <!-- 여기에 날씨 정보와 추천된 노래를 표시하는 부분을 추가하세요 -->
@@ -59,35 +58,16 @@
                 body: JSON.stringify({ lat: latitude, lon: longitude }),
             }).then(response => response.json());
 
-            const p1 = document.createElement('p');
-            const p2 = document.createElement('p');
-            const img3 = document.createElement('img');
-            const p4 = document.createElement('p');
-            const p5 = document.createElement('p');
-            const p6 = document.createElement('p');
-            const p7 = document.createElement('p');
-            const p8 = document.createElement('p');
-            const p9 = document.createElement('p');
-
-            p1.textContent=weatherData.city;
-            p2.textContent=weatherData.weatherInfo;
-            img3.src=weatherData.weatherIcon;
-            p4.textContent='현재 기온 : '+weatherData.temp+'℃';
-            p5.textContent='체감 기온 : '+weatherData.feels_temp+'℃';
-            p6.textContent='습도 : '+weatherData.humidity+'%';
-            p7.textContent='풍속 : '+weatherData.wind_speed+'m/s';
-            p8.textContent='최저 기온 : '+weatherData.temp_min+'℃';
-            p9.textContent='최고 기온 : '+weatherData.temp_max+'℃';
-
-            city.appendChild(p1);
-            weatherInfo.appendChild(p2);
-            weatherIcon.appendChild(img3);
-            currentTemp.appendChild(p4);
-            feels_temp.appendChild(p5);
-            humidity.appendChild(p6);
-            wind_speed.appendChild(p7);
-            temp_min.appendChild(p8);
-            temp_max.appendChild(p9);
+            city.textContent=weatherData.city;
+            weatherInfo.textContent=weatherData.weatherInfo;
+            weatherIcon.src=weatherData.weatherIcon;
+            currentTemp.textContent='현재 기온 : '+weatherData.temp+'℃';
+            feels_temp.textContent='체감 기온 : '+weatherData.feels_temp+'℃';
+            humidity.textContent='습도 : '+weatherData.humidity+'%';
+            wind_speed.textContent='풍속 : '+weatherData.wind_speed+'m/s';
+            temp_min.textContent='최저 기온 : '+weatherData.temp_min+'℃';
+            temp_max.textContent='최고 기온 : '+weatherData.temp_max+'℃';
+            
         } catch (error) {
             console.error('Error:', error);
         }
