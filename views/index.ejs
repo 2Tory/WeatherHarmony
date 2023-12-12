@@ -30,6 +30,9 @@
     <p id="temp_max">
     </p>
 </div>
+<div id="recommendedSongs">
+
+</div>
 
 <!-- 여기에 날씨 정보와 추천된 노래를 표시하는 부분을 추가하세요 -->
 </body>
@@ -71,6 +74,39 @@
             wind_speed.textContent='풍속 : '+weatherData.wind_speed+'m/s';
             temp_min.textContent='최저 기온 : '+weatherData.temp_min+'℃';
             temp_max.textContent='최고 기온 : '+weatherData.temp_max+'℃';
+
+            const weatherRecommendedSong = await fetch('/searchSong',{
+                method: 'post',
+            }).then(response => response.json());
+
+            console.log(weatherRecommendedSong);
+            // recommendedSongs div 찾기
+            const recommendedSongsDiv = document.getElementById('recommendedSongs');
+
+            // 각 노래를 돌면서 HTML에 추가
+            weatherRecommendedSong.forEach(song => {
+                const songDiv = document.createElement('div');
+                songDiv.classList.add('recommendedSong');
+
+                const img = document.createElement('img');
+                img.src = song.img;
+                img.alt = song.name;
+                img.classList.add('songImg');
+
+                const nameParagraph = document.createElement('p');
+                nameParagraph.textContent = song.name;
+                nameParagraph.classList.add('name');
+
+                const artistParagraph = document.createElement('p');
+                artistParagraph.textContent = song.artist;
+                artistParagraph.classList.add('artist');
+
+                songDiv.appendChild(img);
+                songDiv.appendChild(nameParagraph);
+                songDiv.appendChild(artistParagraph);
+
+                recommendedSongsDiv.appendChild(songDiv);
+            });
 
         } catch (error) {
             console.error('Error:', error);
