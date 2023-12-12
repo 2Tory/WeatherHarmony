@@ -4,15 +4,22 @@ const axios = require('axios');
 const owmApiKey = process.env.OPENWEATHERMAP_API_KEY;
 const spotifyApiKey = process.env.SPOTIFY_API_KEY;
 const spotifyApiSecret = process.env.SPOTIFY_API_SECRET;
+const kakaoRestApiKey = process.env.KAKAO_REST_API_KEY;
 
-let city = 'Busan';  // 원하는 도시명으로 변경 가능
 let lat;
 let lon;
+let name;
+let genre;
+let weatherCode;
+let weatherData;
+
 const lang = 'kr' //언어
 const units = 'metric' //섭씨
+const headers = {
+    'Authorization': `KakaoAK ${kakaoRestApiKey}`,
+};
 
-const searchCityWeatherApiUrl = () => `https://api.openweathermap.org/data/2.5/weather?q=${city}&
-                                                lang=${lang}&units=${units}&appid=${owmApiKey}`;
+const kakaoMapUrl = () => `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${lon}&y=${lat}`
 const currentPositionWeatherApiUrl = () => `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&
                                                 lang=${lang}&units=${units}&appid=${owmApiKey}`;
 
@@ -22,21 +29,31 @@ const controller ={
     },
 
     getCurrentPositionWeather: (req, res) => {
-        lon = req.body.lon;
         lat = req.body.lat;
+        lon = req.body.lon;
+
+        axios.get(kakaoMapUrl(),{
+            headers: headers,
+        })
+            .then(response => {
+                name = response.data.documents[0].address_name;
+        })
+            .catch(error => {
+                console.error(error);
+            });
 
         axios.get(currentPositionWeatherApiUrl())
             .then(response => {
                 // 주어진 날씨 코드
-                const weatherCode = response.data.weather[0].id;
+                weatherCode = response.data.weather[0].id;
                 const weatherIcon = 'https://openweathermap.org/img/wn/'+ response.data.weather[0].icon + '@2x.png';
                 // 날씨 코드에 대한 한글 설명 찾기
                 const weatherDescObj = weatherDescKo.find(item => Object.keys(item)[0] == weatherCode);
                 // 찾은 설명이 있다면 해당 값을 가져오고, 없다면 기본 메시지 표시
                 const weatherDescKorean = weatherDescObj ? Object.values(weatherDescObj)[0] : '알 수 없는 날씨';
 
-                const weatherData = {
-                    city : response.data.name,
+                weatherData = {
+                    city : name,
                     temp : response.data.main.temp,
                     feels_temp : response.data.main.feels_like,
                     temp_min : response.data.main.temp_min,
@@ -130,6 +147,82 @@ const weatherDescKo = [
     { 960: '폭풍' },
     { 961: '강한 폭풍' },
     { 962: '허리케인' },
+]
+
+const weatherGenres = [
+    { 201: 'Ballad' },
+    { 200: 'Jazz' },
+    { 202: 'Rock' },
+    { 210: 'Blues' },
+    { 211: 'Rock' },
+    { 212: 'Rock' },
+    { 221: 'Blues' },
+    { 230: 'Acoustic' },
+    { 231: 'Blues' },
+    { 232: 'Metal' },
+    { 300: 'Ballad' },
+    { 301: 'Ballad' },
+    { 302: 'Jazz' },
+    { 310: 'Ballad' },
+    { 311: 'Ballad' },
+    { 312: 'Jazz' },
+    { 313: 'Acoustic' },
+    { 314: 'Metal' },
+    { 321: 'Jazz' },
+    { 500: 'Acoustic' },
+    { 501: 'Jazz' },
+    { 502: 'Metal' },
+    { 503: 'Rock' },
+    { 504: 'Metal' },
+    { 511: 'Rock' },
+    { 520: 'Acoustic' },
+    { 521: 'Jazz' },
+    { 522: 'Metal' },
+    { 531: 'Jazz' },
+    { 600: 'Carol' },
+    { 601: 'Carol' },
+    { 602: 'Carol' },
+    { 611: 'Carol' },
+    { 612: 'Ballad' },
+    { 615: 'Ballad' },
+    { 616: 'Jazz' },
+    { 620: 'Ballad' },
+    { 621: 'Ballad' },
+    { 622: 'Carol' },
+    { 701: 'Carol' },
+    { 711: 'Acoustic' },
+    { 721: 'Acoustic' },
+    { 731: 'Tropical' },
+    { 741: 'Pop' },
+    { 751: 'Tropical' },
+    { 761: 'Tropical' },
+    { 762: 'Tropical' },
+    { 771: 'Metal' },
+    { 781: 'Metal' },
+    { 800: 'Pop' },
+    { 801: 'Pop' },
+    { 802: 'Pop' },
+    { 803: 'Pop' },
+    { 804: 'Ballad' },
+    { 900: 'Metal' },
+    { 901: 'Metal' },
+    { 902: 'Metal' },
+    { 903: 'Carol' },
+    { 904: 'Tropical' },
+    { 905: 'Electronica' },
+    { 906: 'Rock' },
+    { 951: 'Electronica' },
+    { 952: 'Acoustic' },
+    { 953: 'Acoustic' },
+    { 954: 'Rock' },
+    { 955: 'Acoustic' },
+    { 956: 'Rock' },
+    { 957: 'Metal' },
+    { 958: 'Metal' },
+    { 959: 'Metal' },
+    { 960: 'Metal' },
+    { 961: 'Rock' },
+    { 962: 'Rock' },
 ]
 
 module.exports = {controller};

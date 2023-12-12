@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<link rel="stylesheet" href="/styles/style.css">-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
     <title>Weather Harmony</title>
 </head>
 
 <body>
 <h1>Weather Harmony</h1>
 
-<button id="currentPosition" onclick="getCurrentPositionWeather()">현재 위치</button>
 <div id="weather">
     <p id="city">
     </p>
@@ -36,6 +36,7 @@
 <script>
     let latitude;
     let longitude;
+
     const city = document.getElementById('city');
     const weatherInfo = document.getElementById('weatherInfo');
     const weatherIcon = document.getElementById('weatherIcon');
@@ -49,13 +50,16 @@
     async function getCurrentPositionWeather() {
         try {
             await currentPosition();
+            let today = new Date();
+            let date = `${today.getFullYear()}`+`${today.getMonth()+1}`+`${today.getDate()}`;
+            let time = `${today.getHours()}`+`${today.getMinutes()}`;
 
             const weatherData = await fetch('/currentPosition', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ lat: latitude, lon: longitude }),
+                body: JSON.stringify({ lat: latitude, lon: longitude, date: date, time: time }),
             }).then(response => response.json());
 
             city.textContent=weatherData.city;
@@ -67,7 +71,7 @@
             wind_speed.textContent='풍속 : '+weatherData.wind_speed+'m/s';
             temp_min.textContent='최저 기온 : '+weatherData.temp_min+'℃';
             temp_max.textContent='최고 기온 : '+weatherData.temp_max+'℃';
-            
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -80,7 +84,6 @@
                     (position) => {
                         latitude = position.coords.latitude;
                         longitude = position.coords.longitude;
-
 
                         // 여기에서 위치 정보를 활용한 추가 작업을 수행할 수 있습니다.
                         resolve();
@@ -97,7 +100,7 @@
         });
     }
 
-    getCurrentPositionWeather();
 
+    getCurrentPositionWeather();
 </script>
 </html>
