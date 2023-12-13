@@ -1,0 +1,52 @@
+#container{
+    width: 730px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1 {
+    font-size: 50px;
+}
+#weather{
+    font-size: 20px;
+    width: 55%;
+    text-align: center;
+}
+#tempEtc{
+    display: inline-block;
+    float: left;
+}
+#sun{
+    display: inline-block;
+    float: right;
+}
+#city{
+    text-align: center;
+    font-size: 20px;
+}
+#currentTemp{
+    text-align: center;
+    font-size: 40px;
+}
+#weatherIcon {
+    width: 200px;
+}
+#recommendedSongs{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+}
+.recommendedSong{
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+ }
+.songImg{
+    width:75px;
+    margin-right: 20px;
+}
+.name{
+    margin-left: 10px;
+}

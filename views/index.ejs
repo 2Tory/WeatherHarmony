@@ -5,33 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<link rel="stylesheet" href="/styles/style.css">-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
+    <link rel="stylesheet" href="styles/index.css">
     <title>Weather Harmony</title>
 </head>
 
 <body>
-<h1>Weather Harmony</h1>
+<div id="container">
+    <h1>Weather Harmony</h1>
+    <div id="weather">
+        <p id="city"></p>
+        <img id="weatherIcon" src="img/loding.gif" alt="icon">
+        <p id="currentTemp"></p>
+        <p id="weatherInfo"></p>
+        <div id="tempEtc">
+            <p id="feels_temp"></p>
+            <p id="humidity"></p>
+            <p id="wind_speed"></p>
+        </div>
+        <div id="sun">
+            <p id="sunrise"></p>
+            <p id="sunset"></p>
+        </div>
+    </div>
+    <div id="recommendedSongs">
 
-<div id="weather">
-    <p id="city">
-    </p>
-    <p id="weatherInfo">
-    </p>
-    <img id="weatherIcon" src="img/loding.gif" alt="icon">
-    <p id="currentTemp">
-    </p>
-    <p id="feels_temp">
-    </p>
-    <p id="humidity">
-    </p>
-    <p id="wind_speed">
-    </p>
-    <p id="temp_min">
-    </p>
-    <p id="temp_max">
-    </p>
-</div>
-<div id="recommendedSongs">
-
+    </div>
 </div>
 
 <!-- 여기에 날씨 정보와 추천된 노래를 표시하는 부분을 추가하세요 -->
@@ -47,8 +45,8 @@
     const feels_temp = document.getElementById('feels_temp');
     const humidity = document.getElementById('humidity');
     const wind_speed = document.getElementById('wind_speed');
-    const temp_min = document.getElementById('temp_min');
-    const temp_max = document.getElementById('temp_max');
+    const sunrise = document.getElementById('sunrise');
+    const sunset = document.getElementById('sunset');
 
     async function getCurrentPositionWeather() {
         try {
@@ -67,13 +65,13 @@
 
             city.textContent=weatherData.city;
             weatherInfo.textContent=weatherData.weatherInfo;
-            weatherIcon.src=weatherData.weatherIcon;
-            currentTemp.textContent='현재 기온 : '+weatherData.temp+'℃';
+            weatherIcon.src='/img/'+weatherData.weatherIcon+'.png';
+            currentTemp.textContent=weatherData.temp+'℃';
             feels_temp.textContent='체감 기온 : '+weatherData.feels_temp+'℃';
             humidity.textContent='습도 : '+weatherData.humidity+'%';
             wind_speed.textContent='풍속 : '+weatherData.wind_speed+'m/s';
-            temp_min.textContent='최저 기온 : '+weatherData.temp_min+'℃';
-            temp_max.textContent='최고 기온 : '+weatherData.temp_max+'℃';
+            sunrise.textContent='일출 시간 : '+convertUnixTimestampToKST(weatherData.sunrise).toLocaleTimeString();
+            sunset.textContent='일몰 시간 : '+convertUnixTimestampToKST(weatherData.sunset).toLocaleTimeString();
 
             const weatherRecommendedSong = await fetch('/searchSong',{
                 method: 'post',
@@ -89,21 +87,27 @@
                 songDiv.classList.add('recommendedSong');
 
                 const img = document.createElement('img');
-                img.src = song.img;
-                img.alt = song.name;
+                if (song.img) {
+                    img.src = song.img;
+                    img.alt = song.name;
+                } else {
+                    // 기본 이미지 URL을 여기에 추가하세요.
+                    img.src = 'img/default.png';
+                    img.alt = '기본 이미지';
+                }
                 img.classList.add('songImg');
-
+                const artistParagraph = document.createElement('p');
+                artistParagraph.textContent = song.artist+' -';
+                artistParagraph.classList.add('artist');
                 const nameParagraph = document.createElement('p');
                 nameParagraph.textContent = song.name;
                 nameParagraph.classList.add('name');
 
-                const artistParagraph = document.createElement('p');
-                artistParagraph.textContent = song.artist;
-                artistParagraph.classList.add('artist');
+
 
                 songDiv.appendChild(img);
-                songDiv.appendChild(nameParagraph);
                 songDiv.appendChild(artistParagraph);
+                songDiv.appendChild(nameParagraph);
 
                 recommendedSongsDiv.appendChild(songDiv);
             });
@@ -134,6 +138,19 @@
                 reject('Geolocation이 지원되지 않습니다.');
             }
         });
+    }
+
+    function convertUnixTimestampToKST(unixTimestamp) {
+        // OpenWeatherMap API에서 반환한 Unix 타임스탬프는 초 단위이므로 1000을 곱하여 밀리초 단위로 변환
+        const milliseconds = unixTimestamp * 1000;
+
+        // UTC 시간으로 변환
+        const utcDate = new Date(milliseconds);
+
+        // UTC 시간에서 한국 시간(KST)으로 변환
+        const koreanDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+
+        return koreanDate;
     }
 
 

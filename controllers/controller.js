@@ -45,7 +45,6 @@ const controller ={
             .then(response => {
                 // 주어진 날씨 코드
                 const weatherCode = response.data.weather[0].id;
-                const weatherIcon = 'https://openweathermap.org/img/wn/'+ response.data.weather[0].icon + '@2x.png';
                 // 날씨 코드에 대한 한글 설명 찾기
                 const weatherDescObj = map.weatherDescKo.find(item => Object.keys(item)[0] == weatherCode);
                 // 찾은 설명이 있다면 해당 값을 가져오고, 없다면 기본 메시지 표시
@@ -56,14 +55,15 @@ const controller ={
                 genre = weatherGenre ? Object.values(weatherGenre)[0] : 'k-pop';
                 weatherData = {
                     ...weatherData,
+                    main: response.data.weather[0].main,
                     temp : response.data.main.temp,
                     feels_temp : response.data.main.feels_like,
-                    temp_min : response.data.main.temp_min,
-                    temp_max: response.data.main.temp_max,
                     humidity: response.data.main.humidity,
                     wind_speed: response.data.wind.speed,
                     weatherInfo : weatherDescKorean,
-                    weatherIcon : weatherIcon,
+                    weatherIcon : response.data.weather[0].icon,
+                    sunrise : response.data.sys.sunrise,
+                    sunset : response.data.sys.sunset,
                     genre : genre,
                 };
                 res.json(weatherData);
