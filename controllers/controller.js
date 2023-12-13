@@ -5,14 +5,12 @@ const map = require('../mappings/map');
 const owmApiKey = process.env.OPENWEATHERMAP_API_KEY;
 const lastfmApiKey = process.env.LAST_FM_API_KEY;
 const kakaoRestApiKey = process.env.KAKAO_REST_API_KEY;
-
 let lat;
 let lon;
 let weatherData = {};
 let songData = {};
 let genre;
 let randomPage;
-
 const lang = 'kr' //언어
 const units = 'metric' //섭씨
 const headers = {
@@ -22,7 +20,6 @@ const headers = {
 const kakaoMapUrl = () => `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${lon}&y=${lat}`
 const currentPositionWeatherApiUrl = () => `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&
                                                 lang=${lang}&units=${units}&appid=${owmApiKey}`;
-
 const lastfmSearchUrl = () => `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${genre}&limit=5&page=${randomPage}&api_key=${lastfmApiKey}&format=json`
 
 const controller ={

@@ -1,0 +1,34 @@
+@startuml
+[*] --> Initialized
+
+state Initialized {
+  [*] --> Idle
+  Idle --> FetchingWeather : User requests weather data
+  FetchingWeather --> DisplayingWeather : Weather data received
+  DisplayingWeather --> Idle : User views weather data
+  Idle --> FetchingSongs : User searches for songs
+  FetchingSongs --> DisplayingSongs : Songs received
+  DisplayingSongs --> Idle : User views songs
+}
+
+state FetchingWeather {
+  [*] --> FetchingWeather
+}
+
+state DisplayingWeather {
+  [*] --> DisplayingWeather
+}
+
+state FetchingSongs {
+  [*] --> FetchingSongs
+}
+
+state DisplayingSongs {
+  [*] --> DisplayingSongs
+}
+
+state Idle {
+  [*] --> Idle
+}
+
+@enduml
