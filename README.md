@@ -6,3 +6,4 @@
 - **OpenWeatherMap API**와 **Last.fm API**를 사용하여 날씨 정보와 노래 추천 기능을 구현하였습니다.
   ![image](./public/img/index.PNG)
 
+a
